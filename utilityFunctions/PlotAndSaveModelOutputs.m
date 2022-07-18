@@ -56,7 +56,7 @@ function [] = PlotAndSaveModelOutputs(ModelOutput,outputFileLocation,plotFigures
         subplot(4,ceil(length(minMSEModelPredictors)/4),j), plotAdjustedResponse(mdl,['x',num2str(j)]);
         end
         saveas(gcf,[outputFileLocation,'AdjustedResponsePlots.png'])
-        close(h1)
+        %close(h1)
         
         yhat = Predictors_Norm(:,v) * mdl.Coefficients.Estimate(2:end) + mdl.Coefficients.Estimate(1);
         
