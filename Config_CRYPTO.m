@@ -4,7 +4,7 @@ n_Option = 4;
 
 parameters.alpha = 0.75;
 parameters.CV = 20;
-parameters.Method = 'PLS';
+parameters.Method = 'PCA';
 
 plotFigures = true;
 

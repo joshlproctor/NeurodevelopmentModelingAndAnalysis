@@ -7,7 +7,7 @@ cd(pwd);
 
 %% Set paths 
 
-ExperimentName = 'PLS_FeatureSelection';
+ExperimentName = 'PCA_FeatureSelection';
 setPathsAndConfigParameters;
 
 %% Load configuration file

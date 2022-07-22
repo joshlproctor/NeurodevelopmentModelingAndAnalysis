@@ -55,6 +55,32 @@ function [ModelOutput] = FeatureSelectionAndRegressionAnalysis(Outcome_Norm,Pred
         ModelOutput.PLS.rsquaredPLS = 1 - RSS_PLS/TSS
         ModelOutput.PLS.vipScore = vipScore;
 
+    elseif (strcmp(parameters.Method,'PCA')) || (strcmp(parameters.Method,'ALL'))
+        
+        X_t = Predictors_Norm(:,2:38)';
+
+        [U,Sig,V] = svd(X_t);
+
+        ModelOutput.PCAReg.U = U;
+        ModelOutput.PCAReg.Sig = Sig;
+        ModelOutput.PCAReg.V = V;  
+        
+        X_r = U(:,1:6)'*X_t;
+        
+       
+        
+        %v = find((X_r(2,:)>-3)&(X_r(2,:)<1));
+        variables = [Predictors_Norm(:,1) X_r' Predictors_Norm(:,39:41)];
+        
+        mdl = fitlm(variables,Outcome_Norm); %,'VarNames',{[newNames3(v),"TotalMullen_24Month"]});
+        
+        yhat = variables * mdl.Coefficients.Estimate(2:end) + mdl.Coefficients.Estimate(1);
+
+        ModelOutput.PCAReg.mdl = mdl;
+        ModelOutput.PCAReg.yhat = yhat;
+        ModelOutput.PCAReg.X_r = X_r;
+
+
     end
 
         ModelOutput.Data.Predictors_Norm = Predictors_Norm;

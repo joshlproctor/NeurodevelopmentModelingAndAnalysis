@@ -122,6 +122,69 @@ function [] = PlotAndSaveModelOutputs(ModelOutput,outputFileLocation,plotFigures
         saveas(gcf,[outputFileLocation,'VariableSelectionPLS.png'])
         %close(h4)
 
+   elseif (strcmp(parameters.Method,'PCA')) || (strcmp(parameters.Method,'ALL'))
+
+       mdl = ModelOutput.PCAReg.mdl; 
+       mdl
+       variableNames = ModelOutput.Data.Names_SelectedFeatures;
+
+        
+        g2 = figure;
+        plotResiduals(mdl);
+        saveas(gcf,[outputFileLocation,'ModelFitResiduals.png'])
+        %close(g2);
+        
+        X_r = ModelOutput.PCAReg.X_r;
+        
+        g3 = figure; 
+        hold on
+        for j = 1 : length(X_r(1,:))
+            
+           plot3(X_r(1,j),X_r(2,j),X_r(3,j),'b.')
+        end
+        xlabel('SV 1')
+        ylabel('SV 2')
+        zlabel('SV 3')
+        saveas(gcf,[outputFileLocation,'3DPlotOfProjectedData.png'])
+        %close(g3)
+
+        U = ModelOutput.PCAReg.U;
+        Sig = ModelOutput.PCAReg.Sig;
+
+        g4 = figure;
+        for j = 1 : 4
+            
+            
+            subplot(4,1,j), plot(U(:,j),'.')
+            set(gca,'YLim',[-0.5 0.5])
+            set(gca,'XTick',1:37,'XTickLabel',{})
+            title(['PC ',num2str(j)])
+        end
+        set(gca,'XTick',1:37,'XTickLabel',variableNames(2:38))
+        saveas(gcf,[outputFileLocation,'SingularVectors.png'])
+        %close(g4)
+
+        g5 = figure;
+        plot(diag(Sig)/sum(diag(Sig)),'.')
+        ylabel('Proportion of variance by singular value')
+        xlabel('Singular value number')
+        saveas(gcf,[outputFileLocation,'SingularValues.png'])
+        %close(g5)
+        
+        yhat = ModelOutput.PCAReg.yhat;
+
+        g6 = figure;
+        hold on
+        scatter(Outcome_Norm,yhat)
+        plot(Outcome_Norm,Outcome_Norm)
+        %plot(x,yfitline)
+        xlabel('Actual Change in Mullen Scores 24 Months')
+        ylabel('Predicted Change in Mullen Scores 24 Months')
+        title('GLM Regression Using PCA')
+        hold off
+        saveas(gcf,[outputFileLocation,'Prediction.png'])
+        %close(g6)
+
    end
 
    save([outputFileLocation,'ModelFits'])
