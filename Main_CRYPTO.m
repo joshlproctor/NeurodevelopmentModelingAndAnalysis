@@ -7,7 +7,7 @@ cd(pwd);
 
 %% Set paths 
 
-ExperimentName = 'LASSO_FeatureSelection';
+ExperimentName = 'PLS_FeatureSelection';
 setPathsAndConfigParameters;
 
 %% Load configuration file

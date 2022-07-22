@@ -69,11 +69,61 @@ function [] = PlotAndSaveModelOutputs(ModelOutput,outputFileLocation,plotFigures
         title('Unbiased GLM Regression Using LASSO and CV selected markers')
         hold off
         saveas(gcf,[outputFileLocation,'UnbiasedGLMRegression.png'])
-        close(h1)
+        close(h1)        
 
-        save([outputFileLocation,'ModelFits'])
- 
+   elseif (strcmp(parameters.Method,'PLS')) || (strcmp(parameters.Method,'ALL'))
+        
+        PCTVAR = ModelOutput.PLS.PCTVAR;
+        beta = ModelOutput.PLS.beta;
+        vipScore = ModelOutput.PLS.vipScore;
+        indVIP = ModelOutput.PLS.indVIP;
+        variableNames = ModelOutput.Data.Names_SelectedFeatures;
+        mode = ModelOutput.PLS.mode;
 
-    end
+        h1 = figure;
+        plot(1:mode,cumsum(100*PCTVAR(2,:)),'-bo');
+        xlabel('Number of PLS components');
+        ylabel('Percent Variance Explained in y');
+        saveas(gcf,[outputFileLocation,'PercentVarianceExplainedPLS.png'])
+        %close(h1) 
+        
+
+        h2 = figure;
+        yhat = [ones(size(Predictors_Norm(:,:),1),1) Predictors_Norm]*beta;
+        residuals = Outcome_Norm - yhat;
+        figure
+        stem(residuals)
+        xlabel('Observations');
+        ylabel('Residuals'); 
+        saveas(gcf,[outputFileLocation,'ResidualsPLS.png'])
+        %close(h2);
+        
+        h3 = figure;
+        hold on
+        scatter(Outcome_Norm,yhat)
+        plot(Outcome_Norm,Outcome_Norm)
+        xlabel('Actual Mullen Scores 36 Months')
+        ylabel('Predicted Mullen Scores 24 Months')
+        title('PLS Using All marker data')
+        hold off
+        saveas(gcf,[outputFileLocation,'PredictionPLS.png'])
+        %close(h3);
+     
+        h4 = figure;
+        scatter(1:length(vipScore),vipScore,'x')
+        hold on
+        scatter(indVIP,vipScore(indVIP),'rx')
+        plot([1 length(vipScore)],[1 1],'--k')
+        hold off
+        axis tight
+        set(gca,'XTick',1:length(Predictors_Norm(1,:)),'XTickLabel',variableNames)
+        xlabel('Predictor Variables')
+        ylabel('VIP Scores')
+        saveas(gcf,[outputFileLocation,'VariableSelectionPLS.png'])
+        %close(h4)
+
+   end
+
+   save([outputFileLocation,'ModelFits'])
 
 end
