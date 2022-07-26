@@ -182,7 +182,7 @@ function [] = PlotAndSaveModelOutputs(ModelOutput,outputFileLocation,plotFigures
         ylabel('Predicted Change in Mullen Scores 24 Months')
         title('GLM Regression Using PCA')
         hold off
-        saveas(gcf,[outputFileLocation,'Prediction.png'])
+        saveas(gcf,[outputFileLocation,'PredictionPCA.png'])
         %close(g6)
 
    end

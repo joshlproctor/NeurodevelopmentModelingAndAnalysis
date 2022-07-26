@@ -65,7 +65,7 @@ function [ModelOutput] = FeatureSelectionAndRegressionAnalysis(Outcome_Norm,Pred
         ModelOutput.PCAReg.Sig = Sig;
         ModelOutput.PCAReg.V = V;  
         
-        X_r = U(:,1:6)'*X_t;
+        X_r = U(:,1:4)'*X_t;
         
        
         
